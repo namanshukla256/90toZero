@@ -5,7 +5,7 @@ import os
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.api import auth, companies, candidates, nbfc
+from app.api import auth, companies, candidates, nbfc, admin
 
 
 @asynccontextmanager
@@ -56,6 +56,7 @@ app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(companies.router, prefix=settings.API_V1_STR)
 app.include_router(candidates.router, prefix=settings.API_V1_STR)
 app.include_router(nbfc.router, prefix=settings.API_V1_STR)
+app.include_router(admin.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")
@@ -76,16 +77,6 @@ async def health_check():
         "environment": settings.ENVIRONMENT,
         "database": "connected",
         "cors_origins": origins if settings.ENVIRONMENT == "production" else ["localhost"]
-    }
-
-
-@app.get("/api/v1/test")
-async def test_connection():
-    """Test connection endpoint"""
-    return {
-        "message": "API connection successful",
-        "timestamp": "2024-01-28T12:00:00Z",
-        "environment": settings.ENVIRONMENT
     }
 
 
