@@ -11,6 +11,44 @@ from app.models.company import CompanySize
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 
+@router.post("/test-user-creation", response_model=Dict[str, Any])
+async def test_user_creation(db: AsyncSession = Depends(get_db)):
+    """Test creating a single user to debug issues"""
+    try:
+        # Try to create just one admin user
+        test_password = "test123"
+        password_hash = get_password_hash(test_password)
+        
+        test_user = User(
+            email="test@90tozero.com",
+            password_hash=password_hash,
+            user_type=UserType.ADMIN,
+            is_verified=True,
+            is_active=True
+        )
+        
+        db.add(test_user)
+        await db.commit()
+        await db.refresh(test_user)
+        
+        return {
+            "message": "Test user created successfully",
+            "user_id": str(test_user.id),
+            "email": test_user.email,
+            "user_type": test_user.user_type.value
+        }
+        
+    except Exception as e:
+        await db.rollback()
+        error_detail = str(e)
+        print(f"Error creating test user: {error_detail}")
+        return {
+            "error": "Failed to create test user",
+            "detail": error_detail,
+            "type": type(e).__name__
+        }
+
+
 @router.post("/seed-database", response_model=Dict[str, Any])
 async def seed_database(db: AsyncSession = Depends(get_db)):
     """Seed database with default users if they don't exist"""
@@ -56,8 +94,11 @@ async def seed_database(db: AsyncSession = Depends(get_db)):
         
         for user_data in users_to_create:
             try:
+                print(f"Creating user: {user_data['email']}")
+                
                 # Hash password safely
                 password_hash = get_password_hash(user_data["password"])
+                print(f"Password hashed successfully for {user_data['email']}")
                 
                 user = User(
                     email=user_data["email"],
@@ -67,69 +108,28 @@ async def seed_database(db: AsyncSession = Depends(get_db)):
                     is_active=True
                 )
                 db.add(user)
+                print(f"User added to session: {user_data['email']}")
+                
                 await db.flush()  # Get the user ID
+                print(f"User flushed, got ID: {user.id}")
                 
                 created_users.append({
                     "email": user_data["email"],
                     "password": user_data["password"],
-                    "type": user_data["user_type"].value
+                    "type": user_data["user_type"].value,
+                    "id": str(user.id)
                 })
                 
-                # Create profile based on user type
-                if user_data["user_type"] == UserType.COMPANY:
-                    company_profile = Company(
-                        user_id=user.id,
-                        company_name="TechVision Solutions",
-                        industry="Technology",
-                        size=CompanySize.MEDIUM,
-                        website="https://techvision.com",
-                        phone="+91-80-12345678",
-                        address="Tech Park",
-                        city="Bangalore",
-                        state="Karnataka",
-                        country="India"
-                    )
-                    db.add(company_profile)
-                    
-                elif user_data["user_type"] == UserType.CANDIDATE:
-                    candidate_profile = Candidate(
-                        user_id=user.id,
-                        full_name="Rajesh Kumar",
-                        phone="+91-98765-43210",
-                        date_of_birth="1990-05-15",
-                        city="Bangalore",
-                        state="Karnataka", 
-                        country="India",
-                        highest_education="Bachelor's",
-                        years_of_experience=5,
-                        current_salary=800000,
-                        expected_salary=1000000
-                    )
-                    db.add(candidate_profile)
-                    
-                elif user_data["user_type"] == UserType.NBFC:
-                    nbfc_profile = NBFCPartner(
-                        user_id=user.id,
-                        nbfc_name="QuickLoan Finance",
-                        license_number="N-2024-12345",
-                        website="https://quickloan.com",
-                        contact_person="Priya Sharma",
-                        phone="+91-22-87654321",
-                        address="Financial District", 
-                        city="Mumbai",
-                        state="Maharashtra",
-                        country="India",
-                        interest_rate_min=10.5,
-                        interest_rate_max=18.0,
-                        max_loan_amount=5000000,
-                        min_loan_amount=50000,
-                        is_approved=True
-                    )
-                    db.add(nbfc_profile)
+                print(f"User {user_data['email']} created successfully")
+                
+                # Skip profile creation for now to simplify debugging
+                # We'll add profiles back once basic user creation works
                     
             except Exception as user_error:
                 # Log individual user creation error but continue
-                print(f"Error creating user {user_data['email']}: {str(user_error)}")
+                error_msg = str(user_error)
+                print(f"Error creating user {user_data['email']}: {error_msg}")
+                print(f"Error type: {type(user_error).__name__}")
                 continue
         
         await db.commit()
