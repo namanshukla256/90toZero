@@ -78,6 +78,7 @@ instance/
 celerybeat-schedule
 *.pot
 *.mo
+.env.production
 
 # Docker
 *.env.db

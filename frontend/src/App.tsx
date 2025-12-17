@@ -12,6 +12,9 @@ import BuyoutCalculator from './pages/BuyoutCalculator';
 import ProtectedRoute from './components/ProtectedRoute';
 import { UserType } from './types';
 
+// Connection Test (development only)
+import ConnectionTest from './components/ConnectionTest.tsx';
+
 // Dashboard placeholders (to be created)
 import CandidateDashboard from './pages/candidate/Dashboard.tsx';
 import CompanyDashboard from './pages/company/Dashboard.tsx';
@@ -276,6 +279,9 @@ function App() {
         {/* 404 */}
         <Route path="*" element={<div className="p-8 text-center">404 - Page Not Found</div>} />
       </Routes>
+
+      {/* Connection Test - Only show in development */}
+      {import.meta.env.DEV && <ConnectionTest />}
     </BrowserRouter>
   );
 }

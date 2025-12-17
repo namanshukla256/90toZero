@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
+import os
 
 
 class Settings(BaseSettings):
@@ -41,6 +42,16 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        # Allow environment variables to override .env file
+        env_file_encoding = 'utf-8'
 
 
-settings = Settings()
+# Create settings instance with error handling
+try:
+    settings = Settings()
+except Exception as e:
+    print(f"Error loading settings: {e}")
+    print("Environment variables:")
+    for key in ["DATABASE_URL", "SECRET_KEY", "ENVIRONMENT"]:
+        print(f"  {key}: {'SET' if os.getenv(key) else 'NOT SET'}")
+    raise
