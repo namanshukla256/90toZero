@@ -49,6 +49,93 @@ async def test_user_creation(db: AsyncSession = Depends(get_db)):
         }
 
 
+@router.post("/force-seed", response_model=Dict[str, Any])
+async def force_seed_demo_users(db: AsyncSession = Depends(get_db)):
+    """Force create demo users for testing, even if admin exists"""
+    try:
+        # Delete any existing demo users first
+        demo_emails = [
+            "admin@90tozero.com",
+            "demo.company@90tozero.com", 
+            "demo.candidate@90tozero.com",
+            "demo.nbfc@90tozero.com"
+        ]
+        
+        for email in demo_emails:
+            result = await db.execute(select(User).where(User.email == email))
+            existing_user = result.scalar_one_or_none()
+            if existing_user:
+                await db.delete(existing_user)
+        
+        await db.commit()
+        
+        # Now create fresh demo users
+        demo_users = [
+            {
+                "email": "admin@90tozero.com",
+                "password": "admin123",
+                "user_type": UserType.ADMIN
+            },
+            {
+                "email": "demo.company@90tozero.com", 
+                "password": "comp123",
+                "user_type": UserType.COMPANY
+            },
+            {
+                "email": "demo.candidate@90tozero.com",
+                "password": "cand123",
+                "user_type": UserType.CANDIDATE
+            },
+            {
+                "email": "demo.nbfc@90tozero.com",
+                "password": "nbfc123",
+                "user_type": UserType.NBFC
+            }
+        ]
+        
+        created_users = []
+        
+        for user_data in demo_users:
+            try:
+                password_hash = get_password_hash(user_data["password"])
+                
+                user = User(
+                    email=user_data["email"],
+                    password_hash=password_hash,
+                    user_type=user_data["user_type"],
+                    is_verified=True,
+                    is_active=True
+                )
+                db.add(user)
+                await db.flush()
+                
+                created_users.append({
+                    "email": user_data["email"], 
+                    "password": user_data["password"],
+                    "type": user_data["user_type"].value
+                })
+                
+                print(f"Created user: {user_data['email']}")
+                
+            except Exception as user_error:
+                print(f"Error creating user {user_data['email']}: {str(user_error)}")
+                continue
+        
+        await db.commit()
+        
+        return {
+            "message": f"Force-created {len(created_users)} demo users",
+            "users": created_users
+        }
+        
+    except Exception as e:
+        await db.rollback()
+        return {
+            "error": "Failed to force-seed users",
+            "detail": str(e)
+        }
+
+
 @router.post("/seed-database", response_model=Dict[str, Any])
 async def seed_database(db: AsyncSession = Depends(get_db)):
     """Seed database with default users if they don't exist"""
