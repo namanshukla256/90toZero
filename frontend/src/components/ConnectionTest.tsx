@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiClient } from '../services/api';
+import apiClient from '../services/api';
 
 interface ConnectionStatus {
     backend: 'connected' | 'disconnected' | 'loading';
@@ -21,10 +21,10 @@ const ConnectionTest: React.FC = () => {
     const testConnection = async () => {
         try {
             setStatus(prev => ({ ...prev, backend: 'loading' }));
-            
+
             // Get base URL without /api/v1
             const baseURL = apiClient.defaults.baseURL?.replace('/api/v1', '') || 'http://localhost:8000';
-            
+
             // Test backend health (direct endpoint)
             const healthResponse = await fetch(`${baseURL}/health`);
             const healthData = await healthResponse.json();
