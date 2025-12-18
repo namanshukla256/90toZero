@@ -94,7 +94,15 @@ const Analytics: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Analytics & Insights">
+        <DashboardLayout
+            title="Analytics & Insights"
+            showBackButton={true}
+            backTo="/company/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/company/dashboard' },
+                { label: 'Analytics' }
+            ]}
+        >
             <div className="p-8">
                 <div className="mb-6 flex justify-between items-center">
                     <div>

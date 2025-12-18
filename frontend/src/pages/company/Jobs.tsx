@@ -98,7 +98,7 @@ const Jobs = () => {
         <DashboardLayout
             title="Manage Jobs"
             showBackButton={true}
-            backTo="/company"
+            backTo="/company/dashboard"
             breadcrumbs={[{ label: 'Jobs' }]}
         >
             {/* Header */}

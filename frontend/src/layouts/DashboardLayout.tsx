@@ -35,10 +35,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
     const getDashboardPath = () => {
         const userType = user?.user_type;
-        if (userType === 'admin') return '/admin';
-        if (userType === 'company') return '/company';
-        if (userType === 'candidate') return '/candidate';
-        if (userType === 'nbfc') return '/nbfc';
+        if (userType === 'admin') return '/admin/dashboard';
+        if (userType === 'company') return '/company/dashboard';
+        if (userType === 'candidate') return '/candidate/dashboard';
+        if (userType === 'nbfc') return '/nbfc/dashboard';
         return '/';
     };
 

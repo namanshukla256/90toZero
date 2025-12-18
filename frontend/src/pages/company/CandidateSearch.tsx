@@ -89,7 +89,15 @@ const CandidateSearch = () => {
 
     if (loading) {
         return (
-            <DashboardLayout title="Search Candidates">
+            <DashboardLayout
+                title="Search Candidates"
+                showBackButton={true}
+                backTo="/company/dashboard"
+                breadcrumbs={[
+                    { label: 'Dashboard', href: '/company/dashboard' },
+                    { label: 'Search Candidates' }
+                ]}
+            >
                 <div className="flex items-center justify-center h-64">
                     <div className="text-gray-500">Loading candidates...</div>
                 </div>
@@ -98,7 +106,15 @@ const CandidateSearch = () => {
     }
 
     return (
-        <DashboardLayout title="Search Candidates">
+        <DashboardLayout
+            title="Search Candidates"
+            showBackButton={true}
+            backTo="/company/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/company/dashboard' },
+                { label: 'Search Candidates' }
+            ]}
+        >
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Candidate Search</h1>
                 <p className="text-gray-600">Find and connect with qualified candidates</p>

@@ -113,7 +113,15 @@ const Settings: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Settings & Configuration">
+        <DashboardLayout
+            title="Settings & Configuration"
+            showBackButton={true}
+            backTo="/nbfc/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/nbfc/dashboard' },
+                { label: 'Settings' }
+            ]}
+        >
             <div className="p-8">
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900">Settings & Configuration</h1>
@@ -127,8 +135,8 @@ const Settings: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('products')}
                                 className={`px-6 py-4 text-sm font-medium border-b-2 ${activeTab === 'products'
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
                             >
                                 Loan Products
@@ -136,8 +144,8 @@ const Settings: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('criteria')}
                                 className={`px-6 py-4 text-sm font-medium border-b-2 ${activeTab === 'criteria'
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
                             >
                                 Lending Criteria
@@ -145,8 +153,8 @@ const Settings: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('general')}
                                 className={`px-6 py-4 text-sm font-medium border-b-2 ${activeTab === 'general'
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
                             >
                                 General Settings
@@ -173,8 +181,8 @@ const Settings: React.FC = () => {
                                                     <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
                                                     <span
                                                         className={`px-3 py-1 rounded-full text-xs font-semibold ${product.isActive
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-gray-100 text-gray-800'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : 'bg-gray-100 text-gray-800'
                                                             }`}
                                                     >
                                                         {product.isActive ? 'ACTIVE' : 'INACTIVE'}
@@ -216,8 +224,8 @@ const Settings: React.FC = () => {
                                             <button
                                                 onClick={() => handleToggleProduct(product.id)}
                                                 className={`px-4 py-2 rounded-lg transition-colors font-medium ${product.isActive
-                                                        ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                        : 'bg-green-600 text-white hover:bg-green-700'
+                                                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                    : 'bg-green-600 text-white hover:bg-green-700'
                                                     }`}
                                             >
                                                 {product.isActive ? 'Deactivate' : 'Activate'}

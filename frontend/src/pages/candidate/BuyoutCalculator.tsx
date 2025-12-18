@@ -61,7 +61,7 @@ const BuyoutCalculatorPage = () => {
         <DashboardLayout
             title="Buyout Calculator"
             showBackButton={true}
-            backTo="/candidate"
+            backTo="/candidate/dashboard"
             breadcrumbs={[{ label: 'Calculator' }]}
         >
             <div className="mb-8">

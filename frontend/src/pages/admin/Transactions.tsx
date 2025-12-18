@@ -217,7 +217,15 @@ const AdminTransactions: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Transaction Monitoring">
+        <DashboardLayout
+            title="Transaction Monitoring"
+            showBackButton={true}
+            backTo="/admin/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/admin/dashboard' },
+                { label: 'Transactions' }
+            ]}
+        >
             <div className="space-y-6">
                 {/* Header */}
                 <div>

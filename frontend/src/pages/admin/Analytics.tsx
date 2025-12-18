@@ -88,7 +88,15 @@ const AdminAnalytics: React.FC = () => {
     ];
 
     return (
-        <DashboardLayout title="Platform Analytics">
+        <DashboardLayout
+            title="Platform Analytics"
+            showBackButton={true}
+            backTo="/admin/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/admin/dashboard' },
+                { label: 'Analytics' }
+            ]}
+        >
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">

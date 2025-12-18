@@ -91,7 +91,15 @@ const AdminUsers: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="User Management">
+        <DashboardLayout
+            title="User Management"
+            showBackButton={true}
+            backTo="/admin/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/admin/dashboard' },
+                { label: 'User Management' }
+            ]}
+        >
             <div className="space-y-6">
                 {/* Header */}
                 <div>

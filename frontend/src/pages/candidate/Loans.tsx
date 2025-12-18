@@ -122,7 +122,7 @@ const Loans = () => {
             <DashboardLayout
                 title="My Loans"
                 showBackButton={true}
-                backTo="/candidate"
+                backTo="/candidate/dashboard"
                 breadcrumbs={[{ label: 'Loans' }]}
             >
                 <div className="flex items-center justify-center h-64">
@@ -139,7 +139,7 @@ const Loans = () => {
         <DashboardLayout
             title="My Loans"
             showBackButton={true}
-            backTo="/candidate"
+            backTo="/candidate/dashboard"
             breadcrumbs={[{ label: 'Loans' }]}
         >
             <div className="mb-8">

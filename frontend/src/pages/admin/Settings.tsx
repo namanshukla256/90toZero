@@ -69,7 +69,15 @@ const AdminSettings: React.FC = () => {
     ];
 
     return (
-        <DashboardLayout title="Platform Settings">
+        <DashboardLayout
+            title="Platform Settings"
+            showBackButton={true}
+            backTo="/admin/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/admin/dashboard' },
+                { label: 'Settings' }
+            ]}
+        >
             <div className="space-y-6">
                 {/* Header */}
                 <div>
@@ -86,8 +94,8 @@ const AdminSettings: React.FC = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition ${activeTab === tab.id
-                                            ? 'bg-blue-50 text-blue-700'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-blue-50 text-blue-700'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     <span>{tab.icon}</span>

@@ -101,7 +101,7 @@ const Applications = () => {
             <DashboardLayout
                 title="My Applications"
                 showBackButton={true}
-                backTo="/candidate"
+                backTo="/candidate/dashboard"
                 breadcrumbs={[{ label: 'Applications' }]}
             >
                 <div className="flex items-center justify-center h-64">
@@ -118,7 +118,7 @@ const Applications = () => {
         <DashboardLayout
             title="My Applications"
             showBackButton={true}
-            backTo="/candidate"
+            backTo="/candidate/dashboard"
             breadcrumbs={[{ label: 'Applications' }]}
         >
             <div className="flex items-center justify-between mb-8">

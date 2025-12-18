@@ -227,7 +227,15 @@ const Portfolio: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Loan Portfolio">
+        <DashboardLayout
+            title="Loan Portfolio"
+            showBackButton={true}
+            backTo="/nbfc/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/nbfc/dashboard' },
+                { label: 'Portfolio' }
+            ]}
+        >
             <div className="p-8">
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900">Loan Portfolio</h1>

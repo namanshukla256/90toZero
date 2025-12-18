@@ -234,7 +234,7 @@ const Applications: React.FC = () => {
         <DashboardLayout
             title="Applications"
             showBackButton={true}
-            backTo="/company"
+            backTo="/company/dashboard"
             breadcrumbs={[{ label: 'Applications' }]}
         >
             <div className="p-8">

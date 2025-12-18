@@ -128,10 +128,10 @@ const Login = () => {
 
                 <div className="mt-6 text-center text-xs text-gray-500">
                     <p className="font-semibold mb-2">🧪 Demo Accounts:</p>
-                    <p className="mt-1">👑 Admin: admin@90tozero.com / Admin123</p>
-                    <p>🏢 Company: demo.company@90tozero.com / Company123</p>
-                    <p>👨‍💼 Candidate: demo.candidate@90tozero.com / Candidate123</p>
-                    <p>🏦 NBFC: demo.nbfc@90tozero.com / NBFC123</p>
+                    <p className="mt-1">👑 Admin: admin@90tozero.com / admin123</p>
+                    <p>🏢 Company: demo.company@90tozero.com / comp123</p>
+                    <p>👨‍💼 Candidate: demo.candidate@90tozero.com / cand123</p>
+                    <p>🏦 NBFC: demo.nbfc@90tozero.com / nbfc123</p>
                 </div>
             </div>
         </div>

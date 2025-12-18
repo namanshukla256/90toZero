@@ -85,7 +85,7 @@ const Jobs = () => {
             <DashboardLayout
                 title="Browse Jobs"
                 showBackButton={true}
-                backTo="/candidate"
+                backTo="/candidate/dashboard"
                 breadcrumbs={[{ label: 'Jobs' }]}
             >
                 <div className="flex items-center justify-center h-64">
@@ -102,7 +102,7 @@ const Jobs = () => {
         <DashboardLayout
             title="Browse Jobs"
             showBackButton={true}
-            backTo="/candidate"
+            backTo="/candidate/dashboard"
             breadcrumbs={[{ label: 'Jobs' }]}
         >
             <div className="mb-8">

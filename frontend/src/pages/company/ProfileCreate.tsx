@@ -49,7 +49,15 @@ const CompanyProfileCreate = () => {
     };
 
     return (
-        <DashboardLayout title="Create Company Profile">
+        <DashboardLayout
+            title="Create Company Profile"
+            showBackButton={true}
+            backTo="/company/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/company/dashboard' },
+                { label: 'Create Profile' }
+            ]}
+        >
             <div className="max-w-3xl mx-auto">
                 <div className="card">
                     <h2 className="text-2xl font-bold mb-6">Company Information</h2>

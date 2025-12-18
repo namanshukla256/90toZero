@@ -204,7 +204,15 @@ const AdminVerifications: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Verifications">
+        <DashboardLayout
+            title="Verifications"
+            showBackButton={true}
+            backTo="/admin/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/admin/dashboard' },
+                { label: 'Verifications' }
+            ]}
+        >
             <div className="space-y-6">
                 {/* Header */}
                 <div>

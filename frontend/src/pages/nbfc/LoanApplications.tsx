@@ -231,7 +231,15 @@ const LoanApplications: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Loan Applications">
+        <DashboardLayout
+            title="Loan Applications"
+            showBackButton={true}
+            backTo="/nbfc/dashboard"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/nbfc/dashboard' },
+                { label: 'Loan Applications' }
+            ]}
+        >
             <div className="p-8">
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900">Loan Applications</h1>
@@ -639,8 +647,8 @@ const LoanApplications: React.FC = () => {
                                     <button
                                         onClick={handleReviewSubmit}
                                         className={`flex-1 px-4 py-2 text-white rounded-lg transition-colors font-medium ${reviewForm.decision === 'approved'
-                                                ? 'bg-green-600 hover:bg-green-700'
-                                                : 'bg-red-600 hover:bg-red-700'
+                                            ? 'bg-green-600 hover:bg-green-700'
+                                            : 'bg-red-600 hover:bg-red-700'
                                             }`}
                                     >
                                         Submit {reviewForm.decision === 'approved' ? 'Approval' : 'Rejection'}
