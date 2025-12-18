@@ -29,12 +29,12 @@ class NBFCPartner(Base):
     interest_rate_max = Column(Numeric(5, 2))  # e.g., 18.00%
     max_loan_amount = Column(Numeric(12, 2))
     min_loan_amount = Column(Numeric(12, 2))
-    max_tenure_months = Column(String, default=24)
-    min_tenure_months = Column(String, default=6)
+    max_tenure_months = Column(String, default="24")
+    min_tenure_months = Column(String, default="6")
     
     # Verification
     verified_at = Column(DateTime(timezone=True))
-    is_active = Column(String, default=True)
+    is_active = Column(String, default="yes")
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

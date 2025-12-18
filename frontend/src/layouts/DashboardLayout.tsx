@@ -9,11 +9,11 @@ interface DashboardLayoutProps {
     backTo?: string;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
-    children, 
-    title, 
-    showBackButton = false, 
-    backTo 
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+    children,
+    title,
+    showBackButton = false,
+    backTo
 }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -59,8 +59,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                                     Back
                                 </button>
                             ) : (
-                                <Link 
-                                    to={getDashboardPath()} 
+                                <Link
+                                    to={getDashboardPath()}
                                     className="text-2xl font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                 >
                                     90toZero

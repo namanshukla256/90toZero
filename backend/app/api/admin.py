@@ -223,11 +223,12 @@ async def force_seed_simple(db: AsyncSession = Depends(get_db)):
         for user_info in created_users:
             try:
                 if user_info["type"] == "candidate":
+                    from datetime import date
                     candidate_profile = Candidate(
                         user_id=user_info["id"],
                         full_name="Rajesh Kumar",
                         phone="+91-98765-43210",
-                        date_of_birth="1990-05-15",
+                        date_of_birth=date(1990, 5, 15),
                         city="Bangalore",
                         state="Karnataka", 
                         country="India",
@@ -270,8 +271,7 @@ async def force_seed_simple(db: AsyncSession = Depends(get_db)):
                         interest_rate_min=10.5,
                         interest_rate_max=18.0,
                         max_loan_amount=5000000,
-                        min_loan_amount=50000,
-                        is_active=True
+                        min_loan_amount=50000
                     )
                     db.add(nbfc_profile)
                     
@@ -421,11 +421,12 @@ async def force_seed_demo_users(db: AsyncSession = Depends(get_db)):
                     
                 elif user_data["user_type"] == UserType.CANDIDATE:
                     try:
+                        from datetime import date
                         candidate_profile = Candidate(
                             user_id=user.id,  # Make sure user.id is set
                             full_name="Rajesh Kumar",
                             phone="+91-98765-43210",
-                            date_of_birth="1990-05-15",
+                            date_of_birth=date(1990, 5, 15),
                             city="Bangalore",
                             state="Karnataka", 
                             country="India",
@@ -460,8 +461,7 @@ async def force_seed_demo_users(db: AsyncSession = Depends(get_db)):
                             interest_rate_min=10.5,
                             interest_rate_max=18.0,
                             max_loan_amount=5000000,
-                            min_loan_amount=50000,
-                            is_active=True
+                            min_loan_amount=50000
                         )
                         db.add(nbfc_profile)
                         await db.flush()

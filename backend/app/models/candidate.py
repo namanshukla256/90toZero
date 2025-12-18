@@ -36,7 +36,7 @@ class Candidate(Base):
     expected_ctc = Column(Numeric(12, 2))
     preferred_locations = Column(JSON)  # Array of locations
     job_type_preference = Column(String)  # full_time, contract, etc.
-    open_to_buyout = Column(String, default=True)
+    open_to_buyout = Column(String, default="yes")
     
     # Address
     city = Column(String)
