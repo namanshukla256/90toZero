@@ -115,6 +115,58 @@ async def force_seed_demo_users(db: AsyncSession = Depends(get_db)):
                     "type": user_data["user_type"].value
                 })
                 
+                # Create profile based on user type
+                if user_data["user_type"] == UserType.COMPANY:
+                    company_profile = Company(
+                        user_id=user.id,
+                        company_name="TechVision Solutions",
+                        industry="Technology",
+                        size=CompanySize.MEDIUM,
+                        website="https://techvision.com",
+                        phone="+91-80-12345678",
+                        address="Tech Park",
+                        city="Bangalore",
+                        state="Karnataka",
+                        country="India"
+                    )
+                    db.add(company_profile)
+                    
+                elif user_data["user_type"] == UserType.CANDIDATE:
+                    candidate_profile = Candidate(
+                        user_id=user.id,
+                        full_name="Rajesh Kumar",
+                        phone="+91-98765-43210",
+                        date_of_birth="1990-05-15",
+                        city="Bangalore",
+                        state="Karnataka", 
+                        country="India",
+                        highest_education="Bachelor's",
+                        years_of_experience=5,
+                        current_salary=800000,
+                        expected_salary=1000000
+                    )
+                    db.add(candidate_profile)
+                    
+                elif user_data["user_type"] == UserType.NBFC:
+                    nbfc_profile = NBFCPartner(
+                        user_id=user.id,
+                        nbfc_name="QuickLoan Finance",
+                        license_number="N-2024-12345",
+                        website="https://quickloan.com",
+                        contact_person="Priya Sharma",
+                        phone="+91-22-87654321",
+                        address="Financial District", 
+                        city="Mumbai",
+                        state="Maharashtra",
+                        country="India",
+                        interest_rate_min=10.5,
+                        interest_rate_max=18.0,
+                        max_loan_amount=5000000,
+                        min_loan_amount=50000,
+                        is_approved=True
+                    )
+                    db.add(nbfc_profile)
+                
                 print(f"Created user: {user_data['email']}")
                 
             except Exception as user_error:
