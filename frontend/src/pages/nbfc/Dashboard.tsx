@@ -73,6 +73,41 @@ const NBFCDashboard: React.FC = () => {
                     <p className="text-gray-600 mt-1">Welcome back! Here's your portfolio overview</p>
                 </div>
 
+                {/* Quick Actions - Moved to top */}
+                <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 rounded-lg shadow mb-8">
+                    <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <Link
+                            to="/nbfc/applications"
+                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
+                        >
+                            <div className="text-3xl mb-2">📋</div>
+                            <p className="font-semibold">Review Applications</p>
+                        </Link>
+                        <Link
+                            to="/nbfc/loans"
+                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
+                        >
+                            <div className="text-3xl mb-2">💼</div>
+                            <p className="font-semibold">Manage Loans</p>
+                        </Link>
+                        <Link
+                            to="/nbfc/collections"
+                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
+                        >
+                            <div className="text-3xl mb-2">💳</div>
+                            <p className="font-semibold">Collections</p>
+                        </Link>
+                        <Link
+                            to="/nbfc/analytics"
+                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
+                        >
+                            <div className="text-3xl mb-2">📊</div>
+                            <p className="font-semibold">Analytics</p>
+                        </Link>
+                    </div>
+                </div>
+
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     {stats.map((stat, index) => (
@@ -89,41 +124,6 @@ const NBFCDashboard: React.FC = () => {
                             <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
                         </div>
                     ))}
-                </div>
-
-                {/* Quick Actions */}
-                <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 rounded-lg shadow mb-8">
-                    <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <Link
-                            to="/nbfc/applications"
-                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
-                        >
-                            <div className="text-3xl mb-2">📋</div>
-                            <p className="font-semibold">Review Applications</p>
-                        </Link>
-                        <Link
-                            to="/nbfc/portfolio"
-                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
-                        >
-                            <div className="text-3xl mb-2">💼</div>
-                            <p className="font-semibold">Manage Portfolio</p>
-                        </Link>
-                        <Link
-                            to="/nbfc/analytics"
-                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
-                        >
-                            <div className="text-3xl mb-2">📊</div>
-                            <p className="font-semibold">View Analytics</p>
-                        </Link>
-                        <Link
-                            to="/nbfc/settings"
-                            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg transition-all text-center"
-                        >
-                            <div className="text-3xl mb-2">⚙️</div>
-                            <p className="font-semibold">Settings</p>
-                        </Link>
-                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

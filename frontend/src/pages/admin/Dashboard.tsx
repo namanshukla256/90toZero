@@ -104,30 +104,7 @@ const AdminDashboard: React.FC = () => {
                     <p className="mt-2 text-gray-600">Platform overview and system management</p>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {stats.map((stat, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow p-6">
-                            <div className="flex items-center justify-between">
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                                    <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
-                                    <div className="mt-2 flex items-center">
-                                        <span className={`text-sm font-medium ${stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'}`}>
-                                            {stat.changeType === 'increase' ? '↑' : '↓'} {Math.abs(stat.change)}%
-                                        </span>
-                                        <span className="ml-2 text-sm text-gray-500">vs last month</span>
-                                    </div>
-                                </div>
-                                <div className={`${stat.color} p-3 rounded-lg`}>
-                                    <span className="text-3xl">{stat.icon}</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Quick Actions */}
+                {/* Quick Actions - Moved to top */}
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -160,6 +137,29 @@ const AdminDashboard: React.FC = () => {
                             <div className="font-medium text-gray-900">Analytics</div>
                         </Link>
                     </div>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {stats.map((stat, index) => (
+                        <div key={index} className="bg-white rounded-lg shadow p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                    <p className="text-sm font-medium text-gray-600">{stat.label}</p>
+                                    <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
+                                    <div className="mt-2 flex items-center">
+                                        <span className={`text-sm font-medium ${stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'}`}>
+                                            {stat.changeType === 'increase' ? '↑' : '↓'} {Math.abs(stat.change)}%
+                                        </span>
+                                        <span className="ml-2 text-sm text-gray-500">vs last month</span>
+                                    </div>
+                                </div>
+                                <div className={`${stat.color} p-3 rounded-lg`}>
+                                    <span className="text-3xl">{stat.icon}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Main Content Grid */}
