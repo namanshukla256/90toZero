@@ -231,7 +231,12 @@ const Applications: React.FC = () => {
     };
 
     return (
-        <DashboardLayout title="Applications">
+        <DashboardLayout
+            title="Applications"
+            showBackButton={true}
+            backTo="/company"
+            breadcrumbs={[{ label: 'Applications' }]}
+        >
             <div className="p-8">
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900">Applications</h1>

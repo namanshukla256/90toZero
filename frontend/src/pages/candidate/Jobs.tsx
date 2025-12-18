@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar.tsx';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import api from '../../services/api';
 
 interface Job {
@@ -82,161 +82,166 @@ const Jobs = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50">
-                <Navbar />
-                <div className="flex items-center justify-center h-screen">
+            <DashboardLayout
+                title="Browse Jobs"
+                showBackButton={true}
+                backTo="/candidate"
+                breadcrumbs={[{ label: 'Jobs' }]}
+            >
+                <div className="flex items-center justify-center h-64">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                         <p className="text-gray-600">Loading jobs...</p>
                     </div>
                 </div>
-            </div>
+            </DashboardLayout>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Navbar />
+        <DashboardLayout
+            title="Browse Jobs"
+            showBackButton={true}
+            backTo="/candidate"
+            breadcrumbs={[{ label: 'Jobs' }]}
+        >
+            <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Find Your Next Opportunity</h1>
+                <p className="text-gray-600">Discover jobs with buyout support and apply instantly</p>
+            </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Browse Jobs</h1>
-                    <p className="text-gray-600">Find opportunities with buyout support and apply instantly</p>
-                </div>
-
-                {/* Filters */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Job title, company, or skills..."
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Buyout Support</label>
-                            <select
-                                value={buyoutFilter}
-                                onChange={(e) => setBuyoutFilter(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="all">All Jobs</option>
-                                <option value="supported">Any Buyout Support</option>
-                                <option value="full">Full Buyout Only</option>
-                                <option value="partial">Partial Buyout</option>
-                                <option value="facilitation">Loan Facilitation</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                            <select
-                                value={locationFilter}
-                                onChange={(e) => setLocationFilter(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="all">All Locations</option>
-                                <option value="Bangalore">Bangalore</option>
-                                <option value="Mumbai">Mumbai</option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Hyderabad">Hyderabad</option>
-                                <option value="Pune">Pune</option>
-                            </select>
-                        </div>
+            {/* Filters */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Job title, company, or skills..."
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Buyout Support</label>
+                        <select
+                            value={buyoutFilter}
+                            onChange={(e) => setBuyoutFilter(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            <option value="all">All Jobs</option>
+                            <option value="supported">Any Buyout Support</option>
+                            <option value="full">Full Buyout Only</option>
+                            <option value="partial">Partial Buyout</option>
+                            <option value="facilitation">Loan Facilitation</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <select
+                            value={locationFilter}
+                            onChange={(e) => setLocationFilter(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            <option value="all">All Locations</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Pune">Pune</option>
+                        </select>
                     </div>
                 </div>
+            </div>
 
-                {/* Results Count */}
-                <div className="mb-4">
-                    <p className="text-sm text-gray-600">
-                        Showing <span className="font-semibold">{filteredJobs.length}</span> jobs
-                    </p>
-                </div>
+            {/* Results Count */}
+            <div className="mb-4">
+                <p className="text-sm text-gray-600">
+                    Showing <span className="font-semibold">{filteredJobs.length}</span> jobs
+                </p>
+            </div>
 
-                {/* Job Listings */}
-                <div className="space-y-4">
-                    {filteredJobs.length === 0 ? (
-                        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-                            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                            <p className="text-gray-600">Try adjusting your filters to see more results</p>
-                        </div>
-                    ) : (
-                        filteredJobs.map((job) => (
-                            <div key={job.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
-                                            {getBuyoutBadge(job.buyout_support_type)}
-                                        </div>
-                                        <div className="flex items-center gap-4 text-sm text-gray-600">
-                                            <span className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                                </svg>
-                                                {job.company_name}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                {job.location}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
-                                                {job.experience_required}+ years
-                                            </span>
-                                        </div>
+            {/* Job Listings */}
+            <div className="space-y-4">
+                {filteredJobs.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                        <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                        <p className="text-gray-600">Try adjusting your filters to see more results</p>
+                    </div>
+                ) : (
+                    filteredJobs.map((job) => (
+                        <div key={job.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+                                        {getBuyoutBadge(job.buyout_support_type)}
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-lg font-semibold text-gray-900">
-                                            ₹{(job.salary_min / 100000).toFixed(1)}-{(job.salary_max / 100000).toFixed(1)} LPA
-                                        </div>
-                                        {job.max_buyout_amount && (
-                                            <div className="text-sm text-green-600 font-medium">
-                                                Buyout up to ₹{(job.max_buyout_amount / 100000).toFixed(1)}L
-                                            </div>
-                                        )}
+                                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                                        <span className="flex items-center gap-1">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                            {job.company_name}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            {job.location}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                            {job.experience_required}+ years
+                                        </span>
                                     </div>
                                 </div>
-
-                                <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex flex-wrap gap-2">
-                                        {job.required_skills.slice(0, 5).map((skill, index) => (
-                                            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                                                {skill}
-                                            </span>
-                                        ))}
-                                        {job.required_skills.length > 5 && (
-                                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                                                +{job.required_skills.length - 5} more
-                                            </span>
-                                        )}
+                                <div className="text-right">
+                                    <div className="text-lg font-semibold text-gray-900">
+                                        ₹{(job.salary_min / 100000).toFixed(1)}-{(job.salary_max / 100000).toFixed(1)} LPA
                                     </div>
-                                    <button
-                                        onClick={() => applyForJob(job.id)}
-                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                                    >
-                                        Apply Now
-                                    </button>
+                                    {job.max_buyout_amount && (
+                                        <div className="text-sm text-green-600 font-medium">
+                                            Buyout up to ₹{(job.max_buyout_amount / 100000).toFixed(1)}L
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        ))
-                    )}
-                </div>
+
+                            <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex flex-wrap gap-2">
+                                    {job.required_skills.slice(0, 5).map((skill, index) => (
+                                        <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                                            {skill}
+                                        </span>
+                                    ))}
+                                    {job.required_skills.length > 5 && (
+                                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                                            +{job.required_skills.length - 5} more
+                                        </span>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={() => applyForJob(job.id)}
+                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                                >
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
-        </div>
+        </DashboardLayout>
     );
 };
 

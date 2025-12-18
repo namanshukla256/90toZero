@@ -95,7 +95,12 @@ const Jobs = () => {
     const inactiveJobs = jobs.filter(j => !j.is_active);
 
     return (
-        <DashboardLayout title="Manage Jobs">
+        <DashboardLayout
+            title="Manage Jobs"
+            showBackButton={true}
+            backTo="/company"
+            breadcrumbs={[{ label: 'Jobs' }]}
+        >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div>

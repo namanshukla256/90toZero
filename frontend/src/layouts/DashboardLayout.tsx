@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store';
 
 interface DashboardLayoutProps {
@@ -7,16 +7,17 @@ interface DashboardLayoutProps {
     title: string;
     showBackButton?: boolean;
     backTo?: string;
+    breadcrumbs?: Array<{ label: string; href?: string; }>;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     children,
     title,
     showBackButton = false,
-    backTo
+    backTo,
+    breadcrumbs
 }) => {
     const navigate = useNavigate();
-    const location = useLocation();
     const { user, logout } = useAuthStore();
 
     const handleLogout = () => {
@@ -66,7 +67,28 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                                     90toZero
                                 </Link>
                             )}
-                            <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
+                                {breadcrumbs && breadcrumbs.length > 0 && (
+                                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                                        {breadcrumbs.map((crumb, index) => (
+                                            <div key={index} className="flex items-center gap-2">
+                                                <span className="text-gray-400">/</span>
+                                                {crumb.href ? (
+                                                    <Link
+                                                        to={crumb.href}
+                                                        className="hover:text-gray-700 transition-colors"
+                                                    >
+                                                        {crumb.label}
+                                                    </Link>
+                                                ) : (
+                                                    <span className="text-gray-600">{crumb.label}</span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-4">
