@@ -21,7 +21,7 @@ const BuyoutCalculator = () => {
                 notice_period_days: parseInt(noticeDays),
             });
             setResult(response);
-        } catch (err: any) {
+        } catch {
             setError('Failed to calculate buyout. Please try again.');
         } finally {
             setLoading(false);

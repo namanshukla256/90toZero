@@ -90,3 +90,5 @@ secret_key.txt
 
 # Optional: keep migration files tracked (often necessary). Uncomment if you want to ignore
 # migrations/
+
+myenv/
