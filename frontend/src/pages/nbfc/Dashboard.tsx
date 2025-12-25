@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout.tsx';
 import PendingLoansWidget from '../../components/nbfc/PendingLoansWidget';
 import CibilDetailedView from '../../components/nbfc/CibilDetailedView';
@@ -33,7 +33,6 @@ interface ActiveLoan {
 }
 
 const NBFCDashboard: React.FC = () => {
-    const navigate = useNavigate();
     const [showCibilModal, setShowCibilModal] = useState(false);
     const [showApprovalModal, setShowApprovalModal] = useState(false);
     const [selectedApp, setSelectedApp] = useState<any>(null);
