@@ -33,11 +33,18 @@ const LoanApplications: React.FC = () => {
     const [showApprovalModal, setShowApprovalModal] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [cibilCandidate, setCibilCandidate] = useState<{ name: string; score: number } | null>(null);
-    const [reviewForm, setReviewForm] = useState({
+    const [reviewForm, setReviewForm] = useState<{
+        status: string;
+        decision: 'approved' | 'rejected' | '';
+        comments: string;
+        interestRate: number;
+        tenure: number;
+    }>({
         status: '',
+        decision: '',
         comments: '',
-        interestRate: '',
-        tenure: ''
+        interestRate: 0,
+        tenure: 0
     });
 
     // Dummy loan applications data
@@ -238,15 +245,15 @@ const LoanApplications: React.FC = () => {
     };
 
     const handleReviewSubmit = () => {
-        if (!reviewForm.status) {
-            alert('Please select a status');
+        if (!reviewForm.decision) {
+            alert('Please select a decision');
             return;
         }
         console.log('Review submitted:', reviewForm);
-        alert(`Application ${reviewForm.status} for ${selectedApplication?.candidateName}`);
+        alert(`Application ${reviewForm.decision} for ${selectedApplication?.candidateName}`);
         setShowReviewModal(false);
         setSelectedApplication(null);
-        setReviewForm({ status: '', comments: '', interestRate: '', tenure: '' });
+        setReviewForm({ status: '', decision: '', comments: '', interestRate: 0, tenure: 0 });
     };
 
     const calculateEMI = (principal: number, rate: number, tenure: number) => {
