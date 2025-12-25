@@ -8,6 +8,7 @@ import LogoMarquee from '../components/landing/LogoMarquee';
 import BetaTestimonials from '../components/landing/BetaTestimonials';
 import SpeakWithUs from '../components/landing/SpeakWithUs';
 import EnhancedNavbar from '../components/EnhancedNavbar';
+import PlatformFeatures from '../components/landing/PlatformFeatures';
 
 const Home = () => {
     const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -171,6 +172,9 @@ const Home = () => {
 
             {/* Feature Showcase Carousel */}
             <FeatureCarousel />
+
+            {/* Platform Features - Interactive Demo */}
+            <PlatformFeatures />
 
             {/* Platform Capabilities - Candidate-Focused */}
             <section id="features" className="py-20 bg-white">

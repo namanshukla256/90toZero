@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout.tsx';
+import CibilDetailedView from '../../components/nbfc/CibilDetailedView';
+import LoanApprovalModal from '../../components/nbfc/LoanApprovalModal';
 
 interface LoanApplication {
     id: string;
@@ -27,13 +29,9 @@ const LoanApplications: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedApplication, setSelectedApplication] = useState<LoanApplication | null>(null);
     const [showModal, setShowModal] = useState(false);
-    const [showReviewModal, setShowReviewModal] = useState(false);
-    const [reviewForm, setReviewForm] = useState({
-        decision: 'approved' as 'approved' | 'rejected',
-        interestRate: 12,
-        tenure: 12,
-        comments: '',
-    });
+    const [showCibilModal, setShowCibilModal] = useState(false);
+    const [showApprovalModal, setShowApprovalModal] = useState(false);
+    const [cibilCandidate, setCibilCandidate] = useState<{ name: string; score: number } | null>(null);
 
     // Dummy loan applications data
     const [applications] = useState<LoanApplication[]>([
@@ -210,18 +208,26 @@ const LoanApplications: React.FC = () => {
 
     const handleReview = (app: LoanApplication) => {
         setSelectedApplication(app);
-        setReviewForm({
-            decision: 'approved',
-            interestRate: app.interestRate || 12,
-            tenure: app.tenure,
-            comments: '',
-        });
-        setShowReviewModal(true);
+        setShowApprovalModal(true);
     };
 
-    const handleReviewSubmit = () => {
-        console.log('Review submitted:', reviewForm);
-        setShowReviewModal(false);
+    const handleViewCibil = (app: LoanApplication) => {
+        setCibilCandidate({ name: app.candidateName, score: app.creditScore });
+        setShowCibilModal(true);
+    };
+
+    const handleApprove = (decision: any) => {
+        console.log('Loan approved:', decision);
+        alert(`Loan approved for ${selectedApplication?.candidateName}!`);
+        setShowApprovalModal(false);
+        setSelectedApplication(null);
+    };
+
+    const handleReject = (reason: string) => {
+        console.log('Loan rejected:', reason);
+        alert(`Loan rejected for ${selectedApplication?.candidateName}`);
+        setShowApprovalModal(false);
+        setSelectedApplication(null);
     };
 
     const calculateEMI = (principal: number, rate: number, tenure: number) => {
@@ -401,21 +407,30 @@ const LoanApplications: React.FC = () => {
 
                                 <div className="flex gap-3">
                                     <button
-                                        onClick={() => handleViewDetails(app)}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                        onClick={() => handleViewCibil(app)}
+                                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center gap-2"
                                     >
-                                        View Full Details
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        CIBIL Report
                                     </button>
                                     {(app.status === 'pending' || app.status === 'under_review') && (
                                         <button
                                             onClick={() => handleReview(app)}
-                                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2"
                                         >
-                                            Review Application
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Review & Approve
                                         </button>
                                     )}
-                                    <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                                        View Documents
+                                    <button
+                                        onClick={() => handleViewDetails(app)}
+                                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                                    >
+                                        Full Details
                                     </button>
                                 </div>
                             </div>
@@ -657,6 +672,40 @@ const LoanApplications: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                )}
+
+                {/* CIBIL Detailed View Modal */}
+                {showCibilModal && cibilCandidate && (
+                    <CibilDetailedView
+                        score={cibilCandidate.score}
+                        candidateName={cibilCandidate.name}
+                        onClose={() => {
+                            setShowCibilModal(false);
+                            setCibilCandidate(null);
+                        }}
+                    />
+                )}
+
+                {/* Loan Approval Modal */}
+                {showApprovalModal && selectedApplication && (
+                    <LoanApprovalModal
+                        application={{
+                            id: selectedApplication.id,
+                            candidateName: selectedApplication.candidateName,
+                            loanAmount: selectedApplication.loanAmount,
+                            creditScore: selectedApplication.creditScore,
+                            currentCTC: selectedApplication.currentCTC,
+                            noticePeriod: selectedApplication.noticePeriod,
+                            tenure: selectedApplication.tenure,
+                            riskCategory: selectedApplication.riskCategory,
+                        }}
+                        onClose={() => {
+                            setShowApprovalModal(false);
+                            setSelectedApplication(null);
+                        }}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                    />
                 )}
             </div>
         </DashboardLayout>

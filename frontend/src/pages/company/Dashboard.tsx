@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout.tsx';
+import CandidateOnlineStatus from '../../components/company/CandidateOnlineStatus';
 
 interface StatCard {
     label: string;
@@ -197,6 +198,11 @@ const CompanyDashboard: React.FC = () => {
                 </div>
 
                 {/* Buyout Impact Card */}
+                {/* Candidates Online Status */}
+                <div className="mt-8">
+                    <CandidateOnlineStatus />
+                </div>
+
                 <div className="mt-8 bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 p-6 rounded-lg shadow">
                     <div className="flex items-start justify-between">
                         <div>

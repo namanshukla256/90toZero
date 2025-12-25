@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import api from '../../services/api';
+import SalaryHikeGraph from '../../components/candidate/SalaryHikeGraph';
+import HROnlineStatus from '../../components/candidate/HROnlineStatus';
+import { useProfileStore } from '../../store';
 
 interface Job {
     id: string;
@@ -22,11 +25,14 @@ interface Job {
 
 const Jobs = () => {
     const navigate = useNavigate();
+    const { candidateProfile } = useProfileStore();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [buyoutFilter, setBuyoutFilter] = useState<string>('all');
     const [locationFilter, setLocationFilter] = useState<string>('all');
+    const [sortBy, setSortBy] = useState<'default' | 'salary_high' | 'salary_low'>('default');
+    const [selectedJobForHike, setSelectedJobForHike] = useState<Job | null>(null);
 
     useEffect(() => {
         fetchJobs();
@@ -69,6 +75,16 @@ const Jobs = () => {
         return matchesSearch && matchesBuyout && matchesLocation;
     });
 
+    // Sort jobs based on selection
+    const sortedJobs = [...filteredJobs].sort((a, b) => {
+        if (sortBy === 'salary_high') {
+            return b.salary_max - a.salary_max;
+        } else if (sortBy === 'salary_low') {
+            return a.salary_min - b.salary_min;
+        }
+        return 0; // default order
+    });
+
     const getBuyoutBadge = (type: string) => {
         const badges = {
             full: { text: 'Full Buyout', color: 'bg-green-100 text-green-800' },
@@ -78,6 +94,47 @@ const Jobs = () => {
         };
         const badge = badges[type as keyof typeof badges] || badges.none;
         return <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.color}`}>{badge.text}</span>;
+    };
+
+    // Mock HR contacts - in production, these would come from API
+    const mockHRContacts = [
+        {
+            id: '1',
+            name: 'Priya Sharma',
+            company: 'TechCorp India',
+            title: 'Senior HR Manager',
+            isOnline: true,
+            responseTime: 'Usually responds in 1 hour',
+        },
+        {
+            id: '2',
+            name: 'Rahul Mehta',
+            company: 'CloudScale Solutions',
+            title: 'Talent Acquisition Lead',
+            isOnline: true,
+            responseTime: 'Usually responds in 30 minutes',
+        },
+        {
+            id: '3',
+            name: 'Anjali Verma',
+            company: 'DesignHub',
+            title: 'HR Business Partner',
+            isOnline: true,
+            responseTime: 'Usually responds in 2 hours',
+        },
+        {
+            id: '4',
+            name: 'Vikram Singh',
+            company: 'DataFlow Systems',
+            title: 'Recruitment Manager',
+            isOnline: true,
+            responseTime: 'Usually responds in 1 hour',
+        },
+    ];
+
+    const handleStartChat = (hrId: string) => {
+        console.log('Starting chat with HR:', hrId);
+        // In production, this would open a chat interface or send a message
     };
 
     if (loading) {
@@ -112,7 +169,7 @@ const Jobs = () => {
 
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
                         <input
@@ -122,6 +179,18 @@ const Jobs = () => {
                             placeholder="Job title, company, or skills..."
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Sort by Salary</label>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value as any)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            <option value="default">Default</option>
+                            <option value="salary_high">Highest Salary First</option>
+                            <option value="salary_low">Lowest Salary First</option>
+                        </select>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Buyout Support</label>
@@ -158,88 +227,125 @@ const Jobs = () => {
             {/* Results Count */}
             <div className="mb-4">
                 <p className="text-sm text-gray-600">
-                    Showing <span className="font-semibold">{filteredJobs.length}</span> jobs
+                    Showing <span className="font-semibold">{sortedJobs.length}</span> jobs
+                    {sortBy !== 'default' && (
+                        <span className="ml-2 text-blue-600">
+                            (sorted by {sortBy === 'salary_high' ? 'highest' : 'lowest'} salary)
+                        </span>
+                    )}
                 </p>
             </div>
 
-            {/* Job Listings */}
-            <div className="space-y-4">
-                {filteredJobs.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-                        <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                        <p className="text-gray-600">Try adjusting your filters to see more results</p>
-                    </div>
-                ) : (
-                    filteredJobs.map((job) => (
-                        <div key={job.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
-                                        {getBuyoutBadge(job.buyout_support_type)}
-                                    </div>
-                                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                                        <span className="flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                            </svg>
-                                            {job.company_name}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            {job.location}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                            </svg>
-                                            {job.experience_required}+ years
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-lg font-semibold text-gray-900">
-                                        ₹{(job.salary_min / 100000).toFixed(1)}-{(job.salary_max / 100000).toFixed(1)} LPA
-                                    </div>
-                                    {job.max_buyout_amount && (
-                                        <div className="text-sm text-green-600 font-medium">
-                                            Buyout up to ₹{(job.max_buyout_amount / 100000).toFixed(1)}L
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
-
-                            <div className="flex items-center justify-between">
-                                <div className="flex flex-wrap gap-2">
-                                    {job.required_skills.slice(0, 5).map((skill, index) => (
-                                        <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                    {job.required_skills.length > 5 && (
-                                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                                            +{job.required_skills.length - 5} more
-                                        </span>
-                                    )}
-                                </div>
-                                <button
-                                    onClick={() => applyForJob(job.id)}
-                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                                >
-                                    Apply Now
-                                </button>
-                            </div>
+            {/* Two Column Layout: Jobs + Sidebar */}
+            <div className="grid lg:grid-cols-3 gap-6">
+                {/* Job Listings - Left Column */}
+                <div className="lg:col-span-2 space-y-4">
+                    {sortedJobs.length === 0 ? (
+                        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                            <p className="text-gray-600">Try adjusting your filters to see more results</p>
                         </div>
-                    ))
-                )}
+                    ) : (
+                        sortedJobs.map((job) => (
+                            <div key={job.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+                                            {getBuyoutBadge(job.buyout_support_type)}
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                                            <span className="flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                </svg>
+                                                {job.company_name}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                {job.location}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                                {job.experience_required}+ years
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-lg font-semibold text-gray-900">
+                                            ₹{(job.salary_min / 100000).toFixed(1)}-{(job.salary_max / 100000).toFixed(1)} LPA
+                                        </div>
+                                        {job.max_buyout_amount && (
+                                            <div className="text-sm text-green-600 font-medium">
+                                                Buyout up to ₹{(job.max_buyout_amount / 100000).toFixed(1)}L
+                                            </div>
+                                        )}
+                                        {candidateProfile?.current_ctc && (
+                                            <button
+                                                onClick={() => setSelectedJobForHike(job)}
+                                                className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                                </svg>
+                                                View Hike
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <p className="text-gray-700 mb-4 line-clamp-2">{job.description}</p>
+
+                                <div className="flex items-center justify-between">
+                                    <div className="flex flex-wrap gap-2">
+                                        {job.required_skills.slice(0, 5).map((skill, index) => (
+                                            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                        {job.required_skills.length > 5 && (
+                                            <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                                                +{job.required_skills.length - 5} more
+                                            </span>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => applyForJob(job.id)}
+                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                                    >
+                                        Apply Now
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {/* Sidebar - Right Column */}
+                <div className="space-y-6">
+                    {/* Salary Hike Graph */}
+                    {selectedJobForHike && candidateProfile?.current_ctc && (
+                        <SalaryHikeGraph
+                            currentSalary={candidateProfile.current_ctc}
+                            newSalary={selectedJobForHike.salary_max}
+                            compact={true}
+                        />
+                    )}
+
+                    {/* HR Online Status */}
+                    <HROnlineStatus 
+                        hrContacts={mockHRContacts}
+                        onStartChat={handleStartChat}
+                    />
+                </div>
             </div>
         </DashboardLayout>
     );

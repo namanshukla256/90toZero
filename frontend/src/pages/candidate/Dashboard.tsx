@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import { candidateService } from '../../services/profile.service';
 import { useProfileStore } from '../../store';
+import CibilScore from '../../components/candidate/CibilScore';
 
 const CandidateDashboard = () => {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ const CandidateDashboard = () => {
         loans: 1,
         documentsUploaded: 3,
         profileCompletion: 85,
+        cibilScore: 750, // Mock CIBIL score
+        cibilLastUpdated: '2025-12-15T10:00:00Z',
     });
 
     useEffect(() => {
@@ -242,6 +245,12 @@ const CandidateDashboard = () => {
 
             {/* Profile Completion & Documents */}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
+                {/* CIBIL Score Card */}
+                <CibilScore 
+                    score={stats.cibilScore} 
+                    lastUpdated={stats.cibilLastUpdated}
+                />
+
                 <div className="card">
                     <h3 className="text-xl font-bold mb-4">Profile Completion</h3>
                     <div className="mb-4">

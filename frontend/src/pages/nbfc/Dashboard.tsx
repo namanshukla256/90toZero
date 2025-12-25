@@ -1,6 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout.tsx';
+import PendingLoansWidget from '../../components/nbfc/PendingLoansWidget';
+import CibilDetailedView from '../../components/nbfc/CibilDetailedView';
+import LoanApprovalModal from '../../components/nbfc/LoanApprovalModal';
 
 interface StatCard {
     label: string;
@@ -30,6 +33,12 @@ interface ActiveLoan {
 }
 
 const NBFCDashboard: React.FC = () => {
+    const navigate = useNavigate();
+    const [showCibilModal, setShowCibilModal] = useState(false);
+    const [showApprovalModal, setShowApprovalModal] = useState(false);
+    const [selectedApp, setSelectedApp] = useState<any>(null);
+    const [cibilCandidate, setCibilCandidate] = useState<{ name: string; score: number } | null>(null);
+
     // Stats data
     const stats: StatCard[] = [
         { label: 'Total Applications', value: 24, change: 20, changeType: 'increase', icon: '📋', color: 'bg-blue-500' },
@@ -46,6 +55,30 @@ const NBFCDashboard: React.FC = () => {
         { id: 'loan2', candidateName: 'Sneha Reddy', loanAmount: 73333, creditScore: 640, status: 'pending', appliedDate: '2024-01-26' },
         { id: 'loan3', candidateName: 'Arjun Mehta', loanAmount: 95000, creditScore: 720, status: 'under_review', appliedDate: '2024-01-27' },
     ];
+
+    const handleViewCibil = (app: any) => {
+        setCibilCandidate({ name: app.candidateName, score: app.creditScore });
+        setShowCibilModal(true);
+    };
+
+    const handleReview = (app: any) => {
+        setSelectedApp(app);
+        setShowApprovalModal(true);
+    };
+
+    const handleApprove = (decision: any) => {
+        console.log('Approved:', decision);
+        alert(`Loan approved for ${selectedApp?.candidateName}!`);
+        setShowApprovalModal(false);
+        setSelectedApp(null);
+    };
+
+    const handleReject = (reason: string) => {
+        console.log('Rejected:', reason);
+        alert(`Loan rejected for ${selectedApp?.candidateName}`);
+        setShowApprovalModal(false);
+        setSelectedApp(null);
+    };
 
     // Active loans requiring attention
     const activeLoans: ActiveLoan[] = [
@@ -228,6 +261,15 @@ const NBFCDashboard: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Pending Loans Widget */}
+                <div className="mt-8">
+                    <PendingLoansWidget
+                        applications={pendingApplications.map(app => ({ ...app, riskCategory: app.creditScore >= 700 ? 'low' : app.creditScore >= 650 ? 'medium' : 'high' }))}
+                        onViewCibil={handleViewCibil}
+                        onReview={handleReview}
+                    />
+                </div>
+
                 {/* Alerts Section */}
                 <div className="mt-8 space-y-4">
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start">
@@ -245,6 +287,40 @@ const NBFCDashboard: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* CIBIL Modal */}
+                {showCibilModal && cibilCandidate && (
+                    <CibilDetailedView
+                        score={cibilCandidate.score}
+                        candidateName={cibilCandidate.name}
+                        onClose={() => {
+                            setShowCibilModal(false);
+                            setCibilCandidate(null);
+                        }}
+                    />
+                )}
+
+                {/* Approval Modal */}
+                {showApprovalModal && selectedApp && (
+                    <LoanApprovalModal
+                        application={{
+                            id: selectedApp.id,
+                            candidateName: selectedApp.candidateName,
+                            loanAmount: selectedApp.loanAmount,
+                            creditScore: selectedApp.creditScore,
+                            currentCTC: 1200000,
+                            noticePeriod: 60,
+                            tenure: 12,
+                            riskCategory: selectedApp.creditScore >= 700 ? 'low' : selectedApp.creditScore >= 650 ? 'medium' : 'high',
+                        }}
+                        onClose={() => {
+                            setShowApprovalModal(false);
+                            setSelectedApp(null);
+                        }}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                    />
+                )}
             </div>
         </DashboardLayout>
     );

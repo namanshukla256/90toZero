@@ -92,3 +92,4 @@ secret_key.txt
 # migrations/
 
 myenv/
+docs/

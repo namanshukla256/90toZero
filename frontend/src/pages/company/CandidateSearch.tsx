@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout.tsx';
+import CandidateOnlineStatus from '../../components/company/CandidateOnlineStatus';
 import api from '../../services/api';
 
 interface Candidate {
@@ -185,18 +186,21 @@ const CandidateSearch = () => {
                 </p>
             </div>
 
-            {/* Candidates Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredCandidates.length === 0 ? (
-                    <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-12 text-center">
-                        <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No candidates found</h3>
-                        <p className="text-gray-600">Try adjusting your filters to see more results</p>
-                    </div>
-                ) : (
-                    filteredCandidates.map((candidate) => (
+            {/* Main Content with Sidebar */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Candidates Grid */}
+                <div className="lg:col-span-2 space-y-6">
+                    {filteredCandidates.length === 0 ? (
+                        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">No candidates found</h3>
+                            <p className="text-gray-600">Try adjusting your filters to see more results</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6">
+                            {filteredCandidates.map((candidate) => (
                         <div key={candidate.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
@@ -278,8 +282,15 @@ const CandidateSearch = () => {
                                 </button>
                             </div>
                         </div>
-                    ))
-                )}
+                    ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Sidebar - Online Candidates */}
+                <div className="lg:col-span-1 space-y-6">
+                    <CandidateOnlineStatus compact={true} />
+                </div>
             </div>
 
             {/* Candidate Profile Modal */}
